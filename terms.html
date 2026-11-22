@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Términos de Uso – Cabrero App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="index.html"><img src="imagine_images/d5Y8Q.jpg" alt="Cabrero App" class="logo"></a>
+      <div class="lang-switch">
+        <button data-lang="es" class="active">ES</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal">
+    <a href="index.html" data-i18n="back">← Volver a App Cabrero</a>
+    <h1 id="terms-title">Términos de Uso</h1>
+    <div id="terms-content"></div>
+    <p class="note">Última actualización: 22 de noviembre de 2026</p>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const terms = {
+      es: `
+        <h2>Aceptación</h2>
+        <p>Al descargar o usar la App Cabrero, aceptas estos términos mínimos.</p>
+        <h2>Uso del servicio</h2>
+        <p>La app conecta cabreros (pastores de cabras que venden leche) con compradores en el área de Ciudad de Guatemala mediante seguimiento de ubicación y predicción de rutas.</p>
+        <h2>Datos de ubicación</h2>
+        <ul>
+          <li>Para cabreros: la app recuerda y almacena la ruta/path recorrido para poder compartirla y predecir disponibilidad.</li>
+          <li>Para bebedores (compradores): la app conoce tu ubicación solo mientras estás usando la app, para mostrarte cabreros cercanos o próximos.</li>
+        </ul>
+        <h2>Responsabilidad</h2>
+        <p>El servicio es proporcionado “tal cual”. No garantizamos la exactitud de las predicciones ni la seguridad de las transacciones entre usuarios. Usa la app bajo tu propio riesgo.</p>
+        <h2>Cambios</h2>
+        <p>Podemos actualizar estos términos. El uso continuado implica aceptación.</p>
+      `,
+      en: `
+        <h2>Acceptance</h2>
+        <p>By downloading or using the Cabrero App, you agree to these minimal terms.</p>
+        <h2>Use of the service</h2>
+        <p>The app connects cabreros (goat shepherds selling milk) with buyers in the Guatemala City area through location tracking and route forecasting.</p>
+        <h2>Location data</h2>
+        <ul>
+          <li>For cabreros: the app remembers and stores the path/route traveled so it can be shared and used to predict availability.</li>
+          <li>For drinkers (buyers): the app knows your location only while you are using the app, to show you nearby or upcoming shepherds.</li>
+        </ul>
+        <h2>Liability</h2>
+        <p>The service is provided “as is”. We do not guarantee the accuracy of predictions or the safety of transactions between users. Use the app at your own risk.</p>
+        <h2>Changes</h2>
+        <p>We may update these terms. Continued use means acceptance.</p>
+      `
+    };
+    function updateTerms(lang) {
+      lang = lang || localStorage.getItem('cabrero-lang') || 'es';
+      document.getElementById('terms-title').textContent = lang === 'es' ? 'Términos de Uso' : 'Terms of Use';
+      document.getElementById('terms-content').innerHTML = terms[lang];
+    }
+    window.onLangChange = updateTerms;
+    document.addEventListener('DOMContentLoaded', () => updateTerms());
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad – Cabrero App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="index.html"><img src="imagine_images/d5Y8Q.jpg" alt="Cabrero App" class="logo"></a>
+      <div class="lang-switch">
+        <button data-lang="es" class="active">ES</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="legal">
+    <a href="index.html" data-i18n="back">← Volver a App Cabrero</a>
+    <h1 id="privacy-title">Política de Privacidad</h1>
+    <div id="privacy-content"></div>
+    <p class="note">Última actualización: 22 de noviembre de 2026</p>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const privacy = {
+      es: `
+        <h2>Qué datos recopilamos</h2>
+        <p>La App Cabrero utiliza datos de ubicación de forma limitada:</p>
+        <ul>
+          <li><strong>Cabreros:</strong> Guardamos el historial de tu ruta (path) para que otros usuarios puedan ver patrones y predecir cuándo estarás cerca.</li>
+          <li><strong>Bebedores (compradores):</strong> Accedemos a tu ubicación solo mientras la app está abierta y en uso, para calcular qué cabreros están cerca o llegarán pronto. No almacenamos tu ubicación de forma permanente ni la compartimos con terceros.</li>
+        </ul>
+        <h2>Para qué los usamos</h2>
+        <p>Únicamente para conectar cabreros con compradores de leche de cabra mediante seguimiento de rutas y pronósticos de proximidad. No vendemos datos. No usamos publicidad de terceros.</p>
+        <h2>Almacenamiento</h2>
+        <p>Los datos de rutas de cabreros se almacenan en nuestros servidores (actualmente alojados en infraestructura de Cloudflare / GitHub). Los datos de ubicación de bebedores se usan en tiempo real y no se retienen después de cerrar la app.</p>
+        <h2>Tus derechos</h2>
+        <p>Puedes dejar de compartir tu ubicación en cualquier momento desde la configuración de tu dispositivo o desinstalando la app. Si eres cabrero y quieres que borremos tu historial de rutas, contáctanos.</p>
+        <h2>Contacto</h2>
+        <p>Para preguntas sobre privacidad: [tu email o contacto]</p>
+      `,
+      en: `
+        <h2>What data we collect</h2>
+        <p>The Cabrero App uses location data in a limited way:</p>
+        <ul>
+          <li><strong>Cabreros:</strong> We store your route history (path) so other users can see patterns and predict when you will be nearby.</li>
+          <li><strong>Drinkers (buyers):</strong> We access your location only while the app is open and in use, to calculate which shepherds are nearby or coming soon. We do not permanently store your location or share it with third parties.</li>
+        </ul>
+        <h2>How we use it</h2>
+        <p>Only to connect cabreros with goat milk buyers through route tracking and proximity forecasts. We do not sell data. We do not use third-party advertising.</p>
+        <h2>Storage</h2>
+        <p>Cabrero route data is stored on our servers (currently hosted on Cloudflare / GitHub infrastructure). Drinker location data is used in real time and is not retained after the app is closed.</p>
+        <h2>Your rights</h2>
+        <p>You can stop sharing your location at any time from your device settings or by uninstalling the app. If you are a cabrero and want us to delete your route history, contact us.</p>
+        <h2>Contact</h2>
+        <p>For privacy questions: [your email or contact]</p>
+      `
+    };
+    function updatePrivacy(lang) {
+      lang = lang || localStorage.getItem('cabrero-lang') || 'es';
+      document.getElementById('privacy-title').textContent = lang === 'es' ? 'Política de Privacidad' : 'Privacy Policy';
+      document.getElementById('privacy-content').innerHTML = privacy[lang];
+    }
+    window.onLangChange = updatePrivacy;
+    document.addEventListener('DOMContentLoaded', () => updatePrivacy());
+  </script>
+</body>
+</html>
