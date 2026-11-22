@@ -24,14 +24,14 @@ const translations = {
   es: {
     title: "Cabrero App",
     subtitle: "Leche de cabra fresca cerca de ti en Ciudad de Guatemala",
-    heroText: "Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La App Cabrero rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.",
+    heroText: "Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La Cabrero App rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.",
     ctaDownload: "Descargar para Android",
     howTitle: "Cómo funciona",
     forCabreros: "Para Cabreros",
     forCabrerosText: "Comparte tu ruta y horario. Más clientes te encuentran. Vende más leche con menos incertidumbre.",
     forDrinkers: "Para Bebedores",
     forDrinkersText: "Ve qué cabreros están cerca o llegarán pronto. Consigue leche fresca sin adivinar rutas.",
-    benefitsTitle: "¿Por qué App Cabrero?",
+    benefitsTitle: "¿Por qué Cabrero App?",
     benefits: [
       "Seguimiento y predicción de rutas en tiempo real",
       "Conecta cabreros directamente con compradores",
@@ -41,7 +41,7 @@ const translations = {
     footerNote: "Actualmente disponible para Android. Alojado en GitHub y Cloudflare.",
     termsLink: "Términos de Uso",
     privacyLink: "Política de Privacidad",
-    back: "← Volver a App Cabrero"
+    back: "← Volver a Cabrero App"
   }
 };
 
