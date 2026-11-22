@@ -22,7 +22,7 @@ const translations = {
     back: "← Back to Cabrero App"
   },
   es: {
-    title: "App Cabrero",
+    title: "Cabrero App",
     subtitle: "Leche de cabra fresca cerca de ti en Ciudad de Guatemala",
     heroText: "Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La App Cabrero rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.",
     ctaDownload: "Descargar para Android",
