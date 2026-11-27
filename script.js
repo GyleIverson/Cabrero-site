@@ -1,29 +1,9 @@
+// Simple bilingual switcher for Cabrero App promo site
 const translations = {
-  en: {
-    title: "Cabrero App",
-    subtitle: "Fresh goat milk near you in Guatemala City",
-    heroText: "Hundreds of cabreros roam Guatemala City and surrounding areas selling fresh goat milk by the cup or liter. Their routes are hard to discover. Cabrero App tracks shepherds’ paths and forecasts when they will be close to you.",
-    ctaDownload: "Download for Android",
-    howTitle: "How it works",
-    forCabreros: "For Cabreros",
-    forCabrerosText: "Share your route and schedule. More customers find you. Sell more milk with less uncertainty.",
-    forDrinkers: "For Drinkers",
-    forDrinkersText: "See which shepherds are nearby or coming soon. Get fresh leche without guessing routes.",
-    benefitsTitle: "Why Cabrero App?",
-    benefits: [
-      "Real-time route tracking and forecasting",
-      "Connects shepherds directly with buyers",
-      "Supports local goat milk producers",
-      "Simple location-based matching"
-    ],
-    footerNote: "Currently available for Android. Hosted on GitHub & Cloudflare.",
-    termsLink: "Terms of Use",
-    privacyLink: "Privacy Policy",
-    back: "← Back to Cabrero App"
-  },
   es: {
     title: "Cabrero App",
     subtitle: "Leche de cabra fresca cerca de ti en Ciudad de Guatemala",
+    heroPitch: "Menos caminar. Encuentra clientes. Más ventas. Consigue la Cabrero App",
     heroText: "Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La Cabrero App rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.",
     ctaDownload: "Descargar para Android",
     howTitle: "Cómo funciona",
@@ -32,52 +12,46 @@ const translations = {
     forDrinkers: "Para Bebedores",
     forDrinkersText: "Ve qué cabreros están cerca o llegarán pronto. Consigue leche fresca sin adivinar rutas.",
     benefitsTitle: "¿Por qué Cabrero App?",
-    benefits: [
-      "Seguimiento y predicción de rutas en tiempo real",
-      "Conecta cabreros directamente con compradores",
-      "Apoya a productores locales de leche de cabra",
-      "Emparejamiento simple basado en ubicación"
-    ],
     footerNote: "Actualmente disponible para Android. Alojado en GitHub y Cloudflare.",
     termsLink: "Términos de Uso",
-    privacyLink: "Política de Privacidad",
-    back: "← Volver a Cabrero App"
+    privacyLink: "Política de Privacidad"
+  },
+  en: {
+    title: "Cabrero App",
+    subtitle: "Fresh goat milk near you in Guatemala City",
+    heroPitch: "Less walking. Find customers. More sales. Get the Cabrero App.",
+    heroText: "Hundreds of shepherds roam Guatemala City and surrounding areas selling fresh goat milk by the cup or liter. Their routes are hard to discover. The Cabrero App tracks the shepherds' paths and predicts when they will be near you.",
+    ctaDownload: "Download for Android",
+    howTitle: "How it works",
+    forCabreros: "For Shepherds",
+    forCabrerosText: "Share your route and schedule. More customers find you. Sell more milk with less uncertainty.",
+    forDrinkers: "For Drinkers",
+    forDrinkersText: "See which shepherds are nearby or arriving soon. Get fresh milk without guessing routes.",
+    benefitsTitle: "Why Cabrero App?",
+    footerNote: "Currently available for Android. Hosted on GitHub and Cloudflare.",
+    termsLink: "Terms of Use",
+    privacyLink: "Privacy Policy"
   }
 };
 
-let currentLang = localStorage.getItem('cabrero-lang') || 'es';
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('cabrero-lang', lang);
+function setLanguage(lang) {
+  document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (translations[lang][key] && !Array.isArray(translations[lang][key])) {
+    if (translations[lang] && translations[lang][key]) {
       el.textContent = translations[lang][key];
     }
   });
-  // Update benefits list if present
-  const list = document.getElementById('benefits-list');
-  if (list) {
-    list.innerHTML = '';
-    translations[lang].benefits.forEach(b => {
-      const li = document.createElement('li');
-      li.textContent = b;
-      list.appendChild(li);
-    });
-  }
   document.querySelectorAll('.lang-switch button').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
-  document.documentElement.lang = lang;
-  if (typeof window.onLangChange === 'function') window.onLangChange(lang);
+  localStorage.setItem('cabrero-lang', lang);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  setLang(currentLang);
-  document.querySelectorAll('.lang-switch button').forEach(btn => {
-    btn.addEventListener('click', () => setLang(btn.dataset.lang));
-  });
-  // Allow legal pages to hook in
-  if (typeof window.onLangChange === 'function') window.onLangChange(currentLang);
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
 });
+
+// Init
+const saved = localStorage.getItem('cabrero-lang') || 'es';
+setLanguage(saved);
