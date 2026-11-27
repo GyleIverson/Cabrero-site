@@ -12,6 +12,10 @@ const translations = {
     forDrinkers: "Para Bebedores",
     forDrinkersText: "Ve qué cabreros están cerca o llegarán pronto. Consigue leche fresca sin adivinar rutas.",
     benefitsTitle: "¿Por qué Cabrero App?",
+    benefit1: "Seguimiento y predicción de rutas en tiempo real",
+    benefit2: "Conecta cabreros directamente con compradores",
+    benefit3: "Apoya a productores locales de leche de cabra",
+    benefit4: "Emparejamiento simple basado en ubicación",
     footerNote: "Actualmente disponible para Android. Alojado en GitHub y Cloudflare.",
     termsLink: "Términos de Uso",
     privacyLink: "Política de Privacidad"
@@ -28,6 +32,10 @@ const translations = {
     forDrinkers: "For Drinkers",
     forDrinkersText: "See which shepherds are nearby or arriving soon. Get fresh milk without guessing routes.",
     benefitsTitle: "Why Cabrero App?",
+    benefit1: "Real-time route tracking and prediction",
+    benefit2: "Connects shepherds directly with buyers",
+    benefit3: "Supports local goat milk producers",
+    benefit4: "Simple location-based matching",
     footerNote: "Currently available for Android. Hosted on GitHub and Cloudflare.",
     termsLink: "Terms of Use",
     privacyLink: "Privacy Policy"
