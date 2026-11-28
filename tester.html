@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .tester-box {
-      max-width: 420px;
+      max-width: 440px;
       margin: 2rem auto;
-      padding: 1.5rem;
+      padding: 1.5rem 1.25rem;
       text-align: center;
       background: #fff;
       border-radius: 12px;
@@ -27,13 +27,19 @@
       font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
-      margin: 1rem 0;
+      margin: 1.25rem 0 0.5rem;
     }
     .google-btn:hover { background: #f8f9fa; }
-    .status { margin-top: 1rem; font-size: 0.95rem; line-height: 1.4; }
-    .success { color: #1b5e20; }
+    .google-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .status { margin-top: 1.25rem; font-size: 1rem; line-height: 1.45; min-height: 1.5em; }
+    .success { color: #1b5e20; font-weight: 500; }
     .error { color: #c62828; }
-    .note { font-size: 0.9rem; color: #555; margin-top: 1rem; }
+    .note { font-size: 0.9rem; color: #555; margin: 0.75rem 0; }
+    .secondary {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .secondary a { color: #555; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -50,12 +56,16 @@
         <p data-i18n="testerSubtitle">Inicia sesión con Google para unirte al testing cerrado de Cabrero App.</p>
         <p class="note" data-i18n="testerNote">Usaremos el correo de tu cuenta de Google (la misma de tu teléfono Android) para agregarte.</p>
 
+        <div id="status" class="status">Cargando…</div>
+
         <button id="googleBtn" class="google-btn" style="display:none;">
           <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
           <span data-i18n="googleBtn">Continuar con Google</span>
         </button>
 
-        <div id="status" class="status"></div>
+        <div class="secondary" id="secondary" style="display:none;">
+          <a href="#" id="signOutLink" data-i18n="signOut">Usar otra cuenta</a>
+        </div>
       </div>
     </div>
   </section>
@@ -63,14 +73,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ========== CONFIG — replace these two lines ==========
-    const SUPABASE_URL = 'https://xxwxujiepiitgbmoxwnc.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_xyAhOd0DPSjzlG-cqnLFPA_fBFDf9TJ';
+    const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
     // ======================================================
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const googleBtn = document.getElementById('googleBtn');
     const statusEl = document.getElementById('status');
+    const secondaryEl = document.getElementById('secondary');
+    const signOutLink = document.getElementById('signOutLink');
 
     const texts = {
       es: {
@@ -78,20 +90,26 @@
         testerSubtitle: "Inicia sesión con Google para unirte al testing cerrado de Cabrero App.",
         testerNote: "Usaremos el correo de tu cuenta de Google (la misma de tu teléfono Android) para agregarte.",
         googleBtn: "Continuar con Google",
-        working: "Conectando con Google…",
+        loading: "Cargando…",
+        working: "Registrándote…",
         success: "¡Listo! Te registramos con el correo<br><strong>{email}</strong><br><br>Te agregaremos al testing de Google Play pronto. Puedes cerrar esta página.",
-        already: "Ya estás registrado con<br><strong>{email}</strong>",
-        error: "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp."
+        already: "Ya estás registrado con<br><strong>{email}</strong><br><br>Te agregaremos al testing pronto.",
+        error: "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",
+        configError: "Configuración pendiente. Contacta al equipo.",
+        signOut: "Usar otra cuenta"
       },
       en: {
         testerTitle: "Register as Tester",
         testerSubtitle: "Sign in with Google to join the Cabrero App closed testing.",
         testerNote: "We will use the email from your Google account (the same one on your Android phone) to add you.",
         googleBtn: "Continue with Google",
-        working: "Connecting to Google…",
+        loading: "Loading…",
+        working: "Registering you…",
         success: "Done! We registered you with<br><strong>{email}</strong><br><br>We will add you to Google Play testing soon. You can close this page.",
-        already: "You are already registered with<br><strong>{email}</strong>",
-        error: "Something went wrong. Please try again or contact us on WhatsApp."
+        already: "You are already registered with<br><strong>{email}</strong><br><br>We will add you to testing soon.",
+        error: "Something went wrong. Please try again or contact us on WhatsApp.",
+        configError: "Configuration pending. Contact the team.",
+        signOut: "Use a different account"
       }
     };
 
@@ -103,13 +121,21 @@
       if (t[key]) el.textContent = t[key];
     });
 
-    async function handleSession(session) {
-      if (!session?.user?.email) return false;
+    function showButton() {
+      googleBtn.style.display = 'inline-flex';
+      googleBtn.disabled = false;
+    }
 
+    function hideButton() {
+      googleBtn.style.display = 'none';
+    }
+
+    async function registerTester(session) {
       const email = session.user.email;
       const userId = session.user.id;
 
-      // Upsert into beta_testers (create the table first — see recipe)
+      statusEl.innerHTML = t.working;
+
       const { error } = await supabase
         .from('beta_testers')
         .upsert({
@@ -119,40 +145,71 @@
         }, { onConflict: 'email' });
 
       if (error) {
-        console.error(error);
+        console.error('beta_testers upsert error:', error);
         statusEl.innerHTML = `<span class="error">${t.error}</span>`;
-        return false;
+        secondaryEl.style.display = 'block';
+        return;
       }
 
       statusEl.innerHTML = `<span class="success">${t.success.replace('{email}', email)}</span>`;
-      googleBtn.style.display = 'none';
-      return true;
+      hideButton();
+      secondaryEl.style.display = 'block';
     }
 
     async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const ok = await handleSession(session);
-        if (ok) return;
+      statusEl.textContent = t.loading;
+
+      // Detect missing config early
+      if (SUPABASE_URL.includes('YOUR_PROJECT') || SUPABASE_ANON_KEY.includes('YOUR_ANON')) {
+        statusEl.innerHTML = `<span class="error">${t.configError}</span>`;
+        return;
       }
-      googleBtn.style.display = 'inline-flex';
+
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error(error);
+          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          showButton();
+          return;
+        }
+
+        if (session?.user?.email) {
+          await registerTester(session);
+        } else {
+          statusEl.textContent = '';
+          showButton();
+        }
+      } catch (e) {
+        console.error(e);
+        statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+        showButton();
+      }
     }
 
     googleBtn.addEventListener('click', async () => {
-      statusEl.innerHTML = t.working;
+      statusEl.textContent = t.working;
       googleBtn.disabled = true;
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin + '/tester.html'
+          redirectTo: window.location.origin + window.location.pathname
         }
       });
 
       if (error) {
+        console.error(error);
         statusEl.innerHTML = `<span class="error">${t.error}</span>`;
         googleBtn.disabled = false;
       }
+    });
+
+    signOutLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+      window.location.reload();
     });
 
     init();
