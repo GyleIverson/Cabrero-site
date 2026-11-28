@@ -67,14 +67,13 @@
 
         <div class="secondary" id="secondary" style="display:none;">
           <button id="unregisterBtn" class="google-btn" style="background:#fff; border-color:#ddd; margin-bottom:0.5rem;" data-i18n="unregisterBtn">Unregister</button>
+          <div id="confirmUnregister" style="display:none; margin-top:0.75rem;">
+            <p data-i18n="sorryText" style="margin-bottom:0.75rem;">Sorry to see you go.</p>
+            <button id="confirmUnregisterBtn" class="google-btn" style="background:#fff; border-color:#c62828; color:#c62828;" data-i18n="confirmUnregister">Yes, unregister me</button>
+          </div>
           <div style="margin-top:0.75rem;">
             <a href="#" id="signOutLink" data-i18n="signOut">Use a different account</a>
           </div>
-        </div>
-
-        <div id="confirmUnregister" style="display:none; margin-top:1rem;">
-          <p data-i18n="sorryText" style="margin-bottom:0.75rem;">Sorry to see you go.</p>
-          <button id="confirmUnregisterBtn" class="google-btn" style="background:#fff; border-color:#c62828; color:#c62828;" data-i18n="confirmUnregister">Yes, unregister me</button>
         </div>
 
         <div style="margin-top: 1.75rem;">
@@ -184,6 +183,7 @@
       statusEl.innerHTML = `<span class="success">${tr.youreInBody.replace('{email}', email)}</span>`;
       googleBtn.style.display = 'none';
       secondaryEl.style.display = 'block';
+      unregisterBtn.style.display = 'inline-flex';
       confirmUnregister.style.display = 'none';
     }
 
@@ -198,6 +198,7 @@
       statusEl.innerHTML = `<span class="success">${tr.welcomeBody.replace('{email}', email)}</span>`;
       googleBtn.style.display = 'none';
       secondaryEl.style.display = 'block';
+      unregisterBtn.style.display = 'inline-flex';
       confirmUnregister.style.display = 'none';
     }
 
