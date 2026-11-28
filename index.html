@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cabrero App – Leche de cabra fresca cerca de ti</title>
-  <meta name="description" content="Conecta cabreros de leche de cabra con compradores en Ciudad de Guatemala. Rastrea rutas y predice cuándo un cabrero estará cerca.">
+  <title>Cabrero App – Menos caminar. Más clientes. Más ventas.</title>
+  <meta name="description" content="App simple para cabreros en Ciudad de Guatemala. Activa el seguimiento cuando sales a vender. Nosotros registramos tu ruta y avisamos a los bebedores. Vende más con menos esfuerzo.">
   <link rel="stylesheet" href="styles.css">
   <style>
     .hero-video-wrap {
@@ -44,6 +44,10 @@
       max-width: 500px;
       line-height: 1.4;
     }
+    .cta-row {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
   </style>
 </head>
 <body>
@@ -60,51 +64,63 @@
   <section class="hero">
     <div class="container">
       <h1 data-i18n="title">Cabrero App</h1>
-      <p class="subtitle" data-i18n="subtitle">Leche de cabra fresca cerca de ti en Ciudad de Guatemala</p>
+      <p class="subtitle" data-i18n="subtitle">Menos caminar. Encuentra clientes. Más ventas.</p>
       <div class="hero-video-wrap">
         <video class="hero-video" autoplay muted loop playsinline controls poster="imagine_images/hero.jpg" aria-label="Cabrero App pitch video">
           <source src="imagine_images/hero.mp4" type="video/mp4">
           Tu navegador no soporta video.
         </video>
-        <div class="hero-pitch-overlay" data-i18n="heroPitch">Menos caminar. Más clientes. Más ventas. Consigue la Cabrero App.</div>
+        <div class="hero-pitch-overlay" data-i18n="heroPitch">Menos caminar. Encuentra clientes. Más ventas. Consigue la Cabrero App.</div>
       </div>
-      <p data-i18n="heroText">Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La Cabrero App rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.</p>
-      <a href="https://cabrero.cabrero.app" class="cta" data-i18n="ctaDownload" target="_blank" rel="noopener">Descargar para Android</a>
-      <!-- Update the download link above to your actual APK or Cloudflare/GitHub release URL -->
+      <p data-i18n="heroText">Solo activa el seguimiento cuando sales a vender. La app registra tu ruta y horarios automáticamente. Avisamos a los bebedores cuándo y dónde sueles pasar para que te encuentren. Puedes compartir tu ubicación al minuto para que planifiquen mejor. También ves dónde están los bebedores ahora y en el pasado, para acortar tus caminatas y vender más rápido.</p>
+      <div class="cta-row">
+        <a href="https://cabrero.cabrero.app" class="cta" data-i18n="ctaDownload" target="_blank" rel="noopener">Regístrate como Tester</a>
+      </div>
+      <!-- Update the link above (and the others) to your Google Play closed testing URL or WhatsApp registration link -->
     </div>
   </section>
 
   <section>
     <div class="container">
-      <h2 data-i18n="howTitle">Cómo funciona</h2>
+      <h2 data-i18n="howTitle">Cómo funciona (muy simple)</h2>
       <div class="cards">
         <div class="card">
-          <h3 data-i18n="forCabreros">Para cabreros</h3>
-          <p data-i18n="forCabrerosText">Comparte tu ruta y horario. Más clientes te encuentran. Vende más leche con menos incertidumbre.</p>
+          <h3 data-i18n="step1">1. Activa y listo</h3>
+          <p data-i18n="step1Text">Enciende el seguimiento cuando sales a vender. Nosotros registramos tu camino y horarios. Tú solo vendes.</p>
         </div>
         <div class="card">
-          <h3 data-i18n="forDrinkers">Para Bebedores</h3>
-          <p data-i18n="forDrinkersText">Ve qué cabreros están cerca o llegarán pronto. Consigue leche fresca sin adivinar rutas.</p>
+          <h3 data-i18n="step2">2. Los clientes te encuentran</h3>
+          <p data-i18n="step2Text">Avisamos a los bebedores cuándo y dónde sueles pasar. Puedes compartir tu ubicación al minuto para que te esperen.</p>
         </div>
+        <div class="card">
+          <h3 data-i18n="step3">3. Vende más, camina menos</h3>
+          <p data-i18n="step3Text">Ve dónde están los bebedores ahora y históricamente. Planifica rutas más cortas y vende toda la leche más rápido.</p>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a href="https://cabrero.cabrero.app" class="cta" data-i18n="ctaDownload" target="_blank" rel="noopener">Regístrate como Tester</a>
       </div>
     </div>
   </section>
 
   <section style="background: var(--accent);">
     <div class="container">
-      <h2 data-i18n="benefitsTitle">¿Por qué Cabrero App?</h2>
+      <h2 data-i18n="benefitsTitle">¿Por qué los cabreros usan la app?</h2>
       <ul id="benefits-list" style="max-width: 600px; margin: 1rem auto; font-size: 1.1rem;">
-        <li data-i18n="benefit1">Seguimiento y predicción de rutas en tiempo real</li>
-        <li data-i18n="benefit2">Conecta cabreros directamente con compradores</li>
-        <li data-i18n="benefit3">Apoya a productores locales de leche de cabra</li>
-        <li data-i18n="benefit4">Emparejamiento simple basado en ubicación</li>
+        <li data-i18n="benefit1">Menos caminar: los clientes te encuentran en tu ruta habitual</li>
+        <li data-i18n="benefit2">Vende más rápido viendo dónde están los bebedores</li>
+        <li data-i18n="benefit3">Control total: activa o pausa el seguimiento cuando quieras</li>
+        <li data-i18n="benefit4">Cero complicaciones: solo enciende la app al salir</li>
       </ul>
+      <div class="cta-row">
+        <a href="https://cabrero.cabrero.app" class="cta" data-i18n="ctaDownload" target="_blank" rel="noopener">Regístrate como Tester</a>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="container">
-      <p data-i18n="footerNote">Actualmente disponible para Android. Alojado en GitHub y Cloudflare.</p>
+      <p data-i18n="footerNote">Disponible para Android. Únete al testing cerrado en Google Play.</p>
       <p style="margin-top: 1rem;">
         <a href="terms.html" data-i18n="termsLink">Términos de Uso</a>
         <a href="privacy.html" data-i18n="privacyLink">Política de Privacidad</a>
@@ -112,6 +128,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20261127b"></script>
+  <script src="script.js?v=20261128a"></script>
 </body>
 </html>
