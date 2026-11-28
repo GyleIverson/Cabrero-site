@@ -106,7 +106,8 @@
         configError: "Configuración pendiente. Contacta al equipo.",
         timeout: "La conexión está tardando demasiado. Revisa tu internet e intenta de nuevo.",
         clientError: "No se pudo cargar el sistema de registro. Recarga la página.",
-        signOut: "Usar otra cuenta"
+        signOut: "Usar otra cuenta",
+        closeFallback: "Si el botón no cierra la pestaña, ciérrala tú mismo."
       },
       en: {
         testerTitle: "Register as Tester",
@@ -121,7 +122,8 @@
         configError: "Configuration pending. Contact the team.",
         timeout: "The connection is taking too long. Check your internet and try again.",
         clientError: "Could not load the registration system. Please reload the page.",
-        signOut: "Use a different account"
+        signOut: "Use a different account",
+        closeFallback: "If the button doesn’t close the tab, close it yourself."
       }
     };
 
@@ -130,6 +132,19 @@
 
     function getT() {
       return texts[currentLang] || texts.es;
+    }
+
+    let lastEmail = null;
+    let lastStatusType = null; // 'success' | 'error' | etc.
+
+    function renderStatus() {
+      if (!lastStatusType) return;
+      const tr = getT();
+      if (lastStatusType === 'success' && lastEmail) {
+        statusEl.innerHTML = `<span class="success">${tr.success.replace('{email}', lastEmail)}</span>`;
+      } else if (lastStatusType === 'error') {
+        statusEl.innerHTML = `<span class="error">${tr.error}</span>`;
+      }
     }
 
     function applyLanguage(newLang) {
@@ -144,6 +159,7 @@
         btn.classList.toggle('active', btn.dataset.lang === currentLang);
       });
       localStorage.setItem('cabrero-lang', currentLang);
+      renderStatus();
     }
 
     applyLanguage(currentLang);
@@ -188,11 +204,14 @@
         if (error) {
           console.error('beta_testers upsert error:', error);
           statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+          lastStatusType = 'error';
           secondaryEl.style.display = 'block';
           return;
         }
 
         statusEl.innerHTML = `<span class="success">${getT().success.replace('{email}', email)}</span>`;
+        lastEmail = email;
+        lastStatusType = 'success';
         hideButton();
         secondaryEl.style.display = 'block';
       } catch (e) {
@@ -276,6 +295,12 @@
 
     closeBtn.addEventListener('click', () => {
       window.close();
+      // Fallback if the browser blocks close
+      setTimeout(() => {
+        if (!window.closed) {
+          statusEl.innerHTML = `<span class="note">${getT().closeFallback || 'Puedes cerrar esta pestaña manualmente.'}</span>`;
+        }
+      }, 300);
     });
 
     init();
