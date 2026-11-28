@@ -46,6 +46,10 @@
   <header>
     <div class="header-inner">
       <a href="index.html"><img src="imagine_images/d5Y8Q.jpg" alt="Cabrero App" class="logo"></a>
+      <div class="lang-switch">
+        <button data-lang="es" class="active">ES</button>
+        <button data-lang="en">EN</button>
+      </div>
     </div>
   </header>
 
@@ -54,7 +58,7 @@
       <div class="tester-box">
         <h1 data-i18n="testerTitle">Regístrate como Tester</h1>
         <p data-i18n="testerSubtitle">Inicia sesión con Google para unirte al testing cerrado de Cabrero App.</p>
-        <p class="note" data-i18n="testerNote">Usaremos el correo de tu cuenta de Google (la misma de tu teléfono Android) para agregarte.</p>
+        <p class="note" data-i18n="testerNote">Para probar la app necesitas una cuenta de Google (la misma que ya tienes en tu teléfono Android). Usaremos ese correo para agregarte al testing.</p>
 
         <div id="status" class="status">Cargando…</div>
 
@@ -65,6 +69,10 @@
 
         <div class="secondary" id="secondary" style="display:none;">
           <a href="#" id="signOutLink" data-i18n="signOut">Usar otra cuenta</a>
+        </div>
+
+        <div style="margin-top: 1.75rem;">
+          <button id="closeBtn" class="google-btn" style="background:#f5f5f5; border-color:#ddd;" data-i18n="closeBtn">Cerrar esta página</button>
         </div>
       </div>
     </div>
@@ -81,13 +89,15 @@
     const statusEl = document.getElementById('status');
     const secondaryEl = document.getElementById('secondary');
     const signOutLink = document.getElementById('signOutLink');
+    const closeBtn = document.getElementById('closeBtn');
 
     const texts = {
       es: {
         testerTitle: "Regístrate como Tester",
         testerSubtitle: "Inicia sesión con Google para unirte al testing cerrado de Cabrero App.",
-        testerNote: "Usaremos el correo de tu cuenta de Google (la misma de tu teléfono Android) para agregarte.",
+        testerNote: "Para probar la app necesitas una cuenta de Google (la misma que ya tienes en tu teléfono Android). Usaremos ese correo para agregarte al testing.",
         googleBtn: "Continuar con Google",
+        closeBtn: "Cerrar esta página",
         loading: "Cargando…",
         working: "Registrándote…",
         success: "¡Listo! Te registramos con el correo<br><strong>{email}</strong><br><br>Te agregaremos al testing de Google Play pronto. Puedes cerrar esta página.",
@@ -101,7 +111,7 @@
       en: {
         testerTitle: "Register as Tester",
         testerSubtitle: "Sign in with Google to join the Cabrero App closed testing.",
-        testerNote: "We will use the email from your Google account (the same one on your Android phone) to add you.",
+        testerNote: "To try the app you need a Google account (the same one already on your Android phone). We will use that email to add you to testing.",
         googleBtn: "Continue with Google",
         loading: "Loading…",
         working: "Registering you…",
@@ -116,11 +126,30 @@
     };
 
     const lang = localStorage.getItem('cabrero-lang') || 'es';
-    const t = texts[lang] || texts.es;
+    let currentLang = lang;
 
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (t[key]) el.textContent = t[key];
+    function getT() {
+      return texts[currentLang] || texts.es;
+    }
+
+    function applyLanguage(newLang) {
+      currentLang = newLang;
+      const tr = getT();
+      document.documentElement.lang = currentLang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (tr[key]) el.textContent = tr[key];
+      });
+      document.querySelectorAll('.lang-switch button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+      });
+      localStorage.setItem('cabrero-lang', currentLang);
+    }
+
+    applyLanguage(currentLang);
+
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+      btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
     });
 
     function showButton() {
@@ -145,7 +174,7 @@
       const email = session.user.email;
       const userId = session.user.id;
 
-      statusEl.innerHTML = t.working;
+      statusEl.innerHTML = getT().working;
 
       try {
         const { error } = await withTimeout(
@@ -158,26 +187,26 @@
 
         if (error) {
           console.error('beta_testers upsert error:', error);
-          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
           secondaryEl.style.display = 'block';
           return;
         }
 
-        statusEl.innerHTML = `<span class="success">${t.success.replace('{email}', email)}</span>`;
+        statusEl.innerHTML = `<span class="success">${getT().success.replace('{email}', email)}</span>`;
         hideButton();
         secondaryEl.style.display = 'block';
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? t.timeout : t.error}</span>`;
+        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? getT().timeout : getT().error}</span>`;
         secondaryEl.style.display = 'block';
       }
     }
 
     async function init() {
-      statusEl.textContent = t.loading;
+      statusEl.textContent = getT().loading;
 
       if (!window.supabase) {
-        statusEl.innerHTML = `<span class="error">${t.clientError}</span>`;
+        statusEl.innerHTML = `<span class="error">${getT().clientError}</span>`;
         return;
       }
 
@@ -185,7 +214,7 @@
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${t.clientError}</span>`;
+        statusEl.innerHTML = `<span class="error">${getT().clientError}</span>`;
         return;
       }
 
@@ -194,7 +223,7 @@
 
         if (error) {
           console.error(error);
-          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
           showButton();
           return;
         }
@@ -207,14 +236,14 @@
         }
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? t.timeout : t.error}</span>`;
+        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? getT().timeout : getT().error}</span>`;
         showButton();
       }
     }
 
     googleBtn.addEventListener('click', async () => {
       if (!supabaseClient) return;
-      statusEl.textContent = t.working;
+      statusEl.textContent = getT().working;
       googleBtn.disabled = true;
 
       try {
@@ -227,12 +256,12 @@
 
         if (error) {
           console.error(error);
-          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
           googleBtn.disabled = false;
         }
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
         googleBtn.disabled = false;
       }
     });
@@ -243,6 +272,10 @@
         await supabaseClient.auth.signOut();
       }
       window.location.reload();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      window.close();
     });
 
     init();
