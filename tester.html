@@ -35,10 +35,7 @@
     .success { color: #1b5e20; font-weight: 500; }
     .error { color: #c62828; }
     .note { font-size: 0.9rem; color: #555; margin: 0.75rem 0; }
-    .secondary {
-      margin-top: 1.5rem;
-      font-size: 0.85rem;
-    }
+    .secondary { margin-top: 1.5rem; font-size: 0.85rem; }
     .secondary a { color: #555; text-decoration: underline; }
   </style>
 </head>
@@ -56,23 +53,32 @@
   <section>
     <div class="container">
       <div class="tester-box">
-        <h1 data-i18n="testerTitle">Regístrate como Tester</h1>
-        <p data-i18n="testerSubtitle">Inicia sesión con Google para unirte al testing cerrado de Cabrero App.</p>
-        <p class="note" data-i18n="testerNote">Para probar la app necesitas una cuenta de Google (la misma que ya tienes en tu teléfono Android). Usaremos ese correo para agregarte al testing.</p>
+        <h1 id="headline" data-i18n="unregTitle">Be a Tester</h1>
+        <p id="subline" data-i18n="unregSub">Become one of the limited few that get to preview the Cabrero App. Help us and other cabreros make life easier, get more customers, and make more money.</p>
+        <p class="note" id="noteLine" data-i18n="unregNote">To join the preview you need to have an Android smartphone and you need to register with your Google account.</p>
+        <p class="note" id="extraLine" data-i18n="unregExtra">Once we have enough cabreros registered, we will send you an email letting you know you can download the Cabrero App from Google Play and start testing.</p>
 
-        <div id="status" class="status">Cargando…</div>
+        <div id="status" class="status"></div>
 
         <button id="googleBtn" class="google-btn" style="display:none;">
           <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
-          <span data-i18n="googleBtn">Continuar con Google</span>
+          <span data-i18n="googleBtn">Continue with Google</span>
         </button>
 
         <div class="secondary" id="secondary" style="display:none;">
-          <a href="#" id="signOutLink" data-i18n="signOut">Usar otra cuenta</a>
+          <button id="unregisterBtn" class="google-btn" style="background:#fff; border-color:#ddd; margin-bottom:0.5rem;" data-i18n="unregisterBtn">Unregister</button>
+          <div style="margin-top:0.75rem;">
+            <a href="#" id="signOutLink" data-i18n="signOut">Use a different account</a>
+          </div>
+        </div>
+
+        <div id="confirmUnregister" style="display:none; margin-top:1rem;">
+          <p data-i18n="sorryText" style="margin-bottom:0.75rem;">Sorry to see you go.</p>
+          <button id="confirmUnregisterBtn" class="google-btn" style="background:#fff; border-color:#c62828; color:#c62828;" data-i18n="confirmUnregister">Yes, unregister me</button>
         </div>
 
         <div style="margin-top: 1.75rem;">
-          <button id="closeBtn" class="google-btn" style="background:#f5f5f5; border-color:#ddd;" data-i18n="closeBtn">Cerrar esta página</button>
+          <button id="closeBtn" class="google-btn" style="background:#f5f5f5; border-color:#ddd;" data-i18n="closeBtn">Close this page</button>
         </div>
       </div>
     </div>
@@ -80,49 +86,66 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ========== CONFIG ==========
     const SUPABASE_URL = 'https://xxwxujiepiitgbmoxwnc.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_xyAhOd0DPSjzlG-cqnLFPA_fBFDf9TJ';
-    // ============================
 
+    const headlineEl = document.getElementById('headline');
+    const sublineEl = document.getElementById('subline');
+    const noteLineEl = document.getElementById('noteLine');
+    const extraLineEl = document.getElementById('extraLine');
     const googleBtn = document.getElementById('googleBtn');
     const statusEl = document.getElementById('status');
     const secondaryEl = document.getElementById('secondary');
     const signOutLink = document.getElementById('signOutLink');
     const closeBtn = document.getElementById('closeBtn');
+    const unregisterBtn = document.getElementById('unregisterBtn');
+    const confirmUnregister = document.getElementById('confirmUnregister');
+    const confirmUnregisterBtn = document.getElementById('confirmUnregisterBtn');
 
     const texts = {
       es: {
-        testerTitle: "Regístrate como Tester",
-        testerSubtitle: "Inicia sesión con Google para unirte al testing cerrado de Cabrero App.",
-        testerNote: "Para probar la app necesitas una cuenta de Google (la misma que ya tienes en tu teléfono Android). Usaremos ese correo para agregarte al testing.",
+        unregTitle: "Sé un Tester",
+        unregSub: "Sé uno de los pocos que podrán probar la Cabrero App antes que nadie. Ayúdanos a ti y a otros cabreros a hacer la vida más fácil, conseguir más clientes y ganar más dinero.",
+        unregNote: "Para unirte a la prueba necesitas un teléfono Android y registrarte con tu cuenta de Google.",
+        unregExtra: "Cuando tengamos suficientes cabreros registrados, te enviaremos un correo para que puedas descargar la Cabrero App desde Google Play y empezar a probar.",
         googleBtn: "Continuar con Google",
         closeBtn: "Cerrar esta página",
         loading: "Cargando…",
         working: "Registrándote…",
-        success: "¡Listo! Te registramos con el correo<br><strong>{email}</strong><br><br>Te agregaremos al testing de Google Play pronto. Puedes cerrar esta página.",
-        already: "Ya estás registrado con<br><strong>{email}</strong><br><br>Te agregaremos al testing pronto.",
+        youreInTitle: "¡Estás dentro!",
+        youreInSub: "¡Nos emociona que nos ayudes!",
+        youreInBody: "Estás registrado como <strong>{email}</strong>.<br><br>Te avisaremos muy pronto cuando tengamos suficientes cabreros para empezar las pruebas. Cuéntales a otros cabreros de esta oportunidad también.",
+        welcomeTitle: "¡Bienvenido amigo!",
+        welcomeBody: "Actualmente estás registrado como tester con <strong>{email}</strong>.",
+        unregisterBtn: "Darme de baja",
+        sorryText: "Lamentamos verte partir.",
+        confirmUnregister: "Sí, darme de baja",
+        unregisteredTitle: "Listo",
+        unregisteredBody: "Ya no estás registrado. Gracias por tu interés.",
         error: "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",
-        configError: "Configuración pendiente. Contacta al equipo.",
-        timeout: "La conexión está tardando demasiado. Revisa tu internet e intenta de nuevo.",
-        clientError: "No se pudo cargar el sistema de registro. Recarga la página.",
         signOut: "Usar otra cuenta",
         closeFallback: "Si el botón no cierra la pestaña, ciérrala tú mismo."
       },
       en: {
-        testerTitle: "Register as Tester",
-        testerSubtitle: "Sign in with Google to join the Cabrero App closed testing.",
-        testerNote: "To try the app you need a Google account (the same one already on your Android phone). We will use that email to add you to testing.",
+        unregTitle: "Be a Tester",
+        unregSub: "Become one of the limited few that get to preview the Cabrero App. Help us and other cabreros make life easier, get more customers, and make more money.",
+        unregNote: "To join the preview you need to have an Android smartphone and you need to register with your Google account.",
+        unregExtra: "Once we have enough cabreros registered, we will send you an email letting you know you can download the Cabrero App from Google Play and start testing.",
         googleBtn: "Continue with Google",
         closeBtn: "Close this page",
         loading: "Loading…",
         working: "Registering you…",
-        success: "Done! We registered you with<br><strong>{email}</strong><br><br>We will add you to Google Play testing soon. You can close this page.",
-        already: "You are already registered with<br><strong>{email}</strong><br><br>We will add you to testing soon.",
+        youreInTitle: "You're in!",
+        youreInSub: "We are excited to have you help us!",
+        youreInBody: "You are registered as <strong>{email}</strong>.<br><br>We will let you know very soon when we have enough cabreros registered to be able to start testing. Tell your fellow cabreros about this opportunity too.",
+        welcomeTitle: "Welcome friend!",
+        welcomeBody: "You are currently registered as a tester as <strong>{email}</strong>.",
+        unregisterBtn: "Unregister",
+        sorryText: "Sorry to see you go.",
+        confirmUnregister: "Yes, unregister me",
+        unregisteredTitle: "Done",
+        unregisteredBody: "You are no longer registered. Thank you for your interest.",
         error: "Something went wrong. Please try again or contact us on WhatsApp.",
-        configError: "Configuration pending. Contact the team.",
-        timeout: "The connection is taking too long. Check your internet and try again.",
-        clientError: "Could not load the registration system. Please reload the page.",
         signOut: "Use a different account",
         closeFallback: "If the button doesn’t close the tab, close it yourself."
       }
@@ -130,22 +153,65 @@
 
     const lang = localStorage.getItem('cabrero-lang') || 'es';
     let currentLang = lang;
+    let currentEmail = null;
+    let currentState = 'unregistered';
 
-    function getT() {
-      return texts[currentLang] || texts.es;
+    function getT() { return texts[currentLang] || texts.es; }
+
+    function showUnregistered() {
+      currentState = 'unregistered';
+      const tr = getT();
+      headlineEl.textContent = tr.unregTitle;
+      sublineEl.textContent = tr.unregSub;
+      noteLineEl.textContent = tr.unregNote;
+      extraLineEl.textContent = tr.unregExtra;
+      extraLineEl.style.display = 'block';
+      statusEl.innerHTML = '';
+      googleBtn.style.display = 'inline-flex';
+      googleBtn.disabled = false;
+      secondaryEl.style.display = 'none';
+      confirmUnregister.style.display = 'none';
     }
 
-    let lastEmail = null;
-    let lastStatusType = null; // 'success' | 'error' | etc.
-
-    function renderStatus() {
-      if (!lastStatusType) return;
+    function showYoureIn(email) {
+      currentState = 'youreIn';
+      currentEmail = email;
       const tr = getT();
-      if (lastStatusType === 'success' && lastEmail) {
-        statusEl.innerHTML = `<span class="success">${tr.success.replace('{email}', lastEmail)}</span>`;
-      } else if (lastStatusType === 'error') {
-        statusEl.innerHTML = `<span class="error">${tr.error}</span>`;
-      }
+      headlineEl.textContent = tr.youreInTitle;
+      sublineEl.textContent = tr.youreInSub;
+      noteLineEl.innerHTML = '';
+      extraLineEl.style.display = 'none';
+      statusEl.innerHTML = `<span class="success">${tr.youreInBody.replace('{email}', email)}</span>`;
+      googleBtn.style.display = 'none';
+      secondaryEl.style.display = 'block';
+      confirmUnregister.style.display = 'none';
+    }
+
+    function showWelcome(email) {
+      currentState = 'welcome';
+      currentEmail = email;
+      const tr = getT();
+      headlineEl.textContent = tr.welcomeTitle;
+      sublineEl.textContent = '';
+      noteLineEl.innerHTML = '';
+      extraLineEl.style.display = 'none';
+      statusEl.innerHTML = `<span class="success">${tr.welcomeBody.replace('{email}', email)}</span>`;
+      googleBtn.style.display = 'none';
+      secondaryEl.style.display = 'block';
+      confirmUnregister.style.display = 'none';
+    }
+
+    function showUnregisteredDone() {
+      currentState = 'unregisteredDone';
+      const tr = getT();
+      headlineEl.textContent = tr.unregisteredTitle;
+      sublineEl.textContent = tr.unregisteredBody;
+      noteLineEl.innerHTML = '';
+      extraLineEl.style.display = 'none';
+      statusEl.innerHTML = '';
+      googleBtn.style.display = 'none';
+      secondaryEl.style.display = 'none';
+      confirmUnregister.style.display = 'none';
     }
 
     function applyLanguage(newLang) {
@@ -160,23 +226,16 @@
         btn.classList.toggle('active', btn.dataset.lang === currentLang);
       });
       localStorage.setItem('cabrero-lang', currentLang);
-      renderStatus();
+      if (currentState === 'youreIn' && currentEmail) showYoureIn(currentEmail);
+      else if (currentState === 'welcome' && currentEmail) showWelcome(currentEmail);
+      else if (currentState === 'unregisteredDone') showUnregisteredDone();
+      else showUnregistered();
     }
 
     applyLanguage(currentLang);
-
     document.querySelectorAll('.lang-switch button').forEach(btn => {
       btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
     });
-
-    function showButton() {
-      googleBtn.style.display = 'inline-flex';
-      googleBtn.disabled = false;
-    }
-
-    function hideButton() {
-      googleBtn.style.display = 'none';
-    }
 
     function withTimeout(promise, ms = 8000) {
       return Promise.race([
@@ -187,77 +246,76 @@
 
     let supabaseClient = null;
 
+    async function checkExisting(email) {
+      const { data, error } = await supabaseClient.from('beta_testers').select('email').eq('email', email).maybeSingle();
+      return !error && !!data;
+    }
+
     async function registerTester(session) {
       const email = session.user.email;
       const userId = session.user.id;
-
       statusEl.innerHTML = getT().working;
-
       try {
+        const already = await checkExisting(email);
         const { error } = await withTimeout(
-          supabaseClient.from('beta_testers').upsert({
-            email,
-            user_id: userId,
-            source: 'promo-site'
-          }, { onConflict: 'email' })
+          supabaseClient.from('beta_testers').upsert({ email, user_id: userId, source: 'promo-site' }, { onConflict: 'email' })
         );
-
         if (error) {
-          console.error('beta_testers upsert error:', error);
+          console.error(error);
           statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
-          lastStatusType = 'error';
-          secondaryEl.style.display = 'block';
           return;
         }
-
-        statusEl.innerHTML = `<span class="success">${getT().success.replace('{email}', email)}</span>`;
-        lastEmail = email;
-        lastStatusType = 'success';
-        hideButton();
-        secondaryEl.style.display = 'block';
+        if (already) showWelcome(email);
+        else showYoureIn(email);
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? getT().timeout : getT().error}</span>`;
-        secondaryEl.style.display = 'block';
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+      }
+    }
+
+    async function unregister() {
+      if (!currentEmail || !supabaseClient) return;
+      statusEl.innerHTML = getT().working;
+      try {
+        const { error } = await supabaseClient.from('beta_testers').delete().eq('email', currentEmail);
+        if (error) {
+          console.error(error);
+          statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+          return;
+        }
+        showUnregisteredDone();
+      } catch (e) {
+        console.error(e);
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
       }
     }
 
     async function init() {
       statusEl.textContent = getT().loading;
-
       if (!window.supabase) {
-        statusEl.innerHTML = `<span class="error">${getT().clientError}</span>`;
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+        showUnregistered();
         return;
       }
-
       try {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${getT().clientError}</span>`;
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+        showUnregistered();
         return;
       }
-
       try {
         const { data: { session }, error } = await withTimeout(supabaseClient.auth.getSession());
-
-        if (error) {
-          console.error(error);
-          statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
-          showButton();
+        if (error || !session?.user?.email) {
+          showUnregistered();
           return;
         }
-
-        if (session?.user?.email) {
-          await registerTester(session);
-        } else {
-          statusEl.textContent = '';
-          showButton();
-        }
+        await registerTester(session);
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? getT().timeout : getT().error}</span>`;
-        showButton();
+        statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
+        showUnregistered();
       }
     }
 
@@ -265,15 +323,11 @@
       if (!supabaseClient) return;
       statusEl.textContent = getT().working;
       googleBtn.disabled = true;
-
       try {
         const { error } = await supabaseClient.auth.signInWithOAuth({
           provider: 'google',
-          options: {
-            redirectTo: window.location.origin + window.location.pathname
-          }
+          options: { redirectTo: window.location.origin + window.location.pathname }
         });
-
         if (error) {
           console.error(error);
           statusEl.innerHTML = `<span class="error">${getT().error}</span>`;
@@ -286,20 +340,25 @@
       }
     });
 
+    unregisterBtn.addEventListener('click', () => {
+      confirmUnregister.style.display = 'block';
+    });
+
+    confirmUnregisterBtn.addEventListener('click', () => {
+      unregister();
+    });
+
     signOutLink.addEventListener('click', async (e) => {
       e.preventDefault();
-      if (supabaseClient) {
-        await supabaseClient.auth.signOut();
-      }
+      if (supabaseClient) await supabaseClient.auth.signOut();
       window.location.reload();
     });
 
     closeBtn.addEventListener('click', () => {
       window.close();
-      // Fallback if the browser blocks close
       setTimeout(() => {
         if (!window.closed) {
-          statusEl.innerHTML = `<span class="note">${getT().closeFallback || 'Puedes cerrar esta pestaña manualmente.'}</span>`;
+          statusEl.innerHTML = `<span class="note">${getT().closeFallback}</span>`;
         }
       }, 300);
     });
