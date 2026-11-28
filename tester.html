@@ -72,12 +72,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ========== CONFIG — replace these two lines ==========
+    // ========== CONFIG ==========
     const SUPABASE_URL = 'https://xxwxujiepiitgbmoxwnc.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_xyAhOd0DPSjzlG-cqnLFPA_fBFDf9TJ';
-    // ======================================================
-
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ============================
 
     const googleBtn = document.getElementById('googleBtn');
     const statusEl = document.getElementById('status');
@@ -96,6 +94,8 @@
         already: "Ya estás registrado con<br><strong>{email}</strong><br><br>Te agregaremos al testing pronto.",
         error: "Algo salió mal. Intenta de nuevo o escríbenos por WhatsApp.",
         configError: "Configuración pendiente. Contacta al equipo.",
+        timeout: "La conexión está tardando demasiado. Revisa tu internet e intenta de nuevo.",
+        clientError: "No se pudo cargar el sistema de registro. Recarga la página.",
         signOut: "Usar otra cuenta"
       },
       en: {
@@ -109,6 +109,8 @@
         already: "You are already registered with<br><strong>{email}</strong><br><br>We will add you to testing soon.",
         error: "Something went wrong. Please try again or contact us on WhatsApp.",
         configError: "Configuration pending. Contact the team.",
+        timeout: "The connection is taking too long. Check your internet and try again.",
+        clientError: "Could not load the registration system. Please reload the page.",
         signOut: "Use a different account"
       }
     };
@@ -130,43 +132,65 @@
       googleBtn.style.display = 'none';
     }
 
+    function withTimeout(promise, ms = 8000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+      ]);
+    }
+
+    let supabaseClient = null;
+
     async function registerTester(session) {
       const email = session.user.email;
       const userId = session.user.id;
 
       statusEl.innerHTML = t.working;
 
-      const { error } = await supabase
-        .from('beta_testers')
-        .upsert({
-          email,
-          user_id: userId,
-          source: 'promo-site'
-        }, { onConflict: 'email' });
+      try {
+        const { error } = await withTimeout(
+          supabaseClient.from('beta_testers').upsert({
+            email,
+            user_id: userId,
+            source: 'promo-site'
+          }, { onConflict: 'email' })
+        );
 
-      if (error) {
-        console.error('beta_testers upsert error:', error);
-        statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+        if (error) {
+          console.error('beta_testers upsert error:', error);
+          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          secondaryEl.style.display = 'block';
+          return;
+        }
+
+        statusEl.innerHTML = `<span class="success">${t.success.replace('{email}', email)}</span>`;
+        hideButton();
         secondaryEl.style.display = 'block';
-        return;
+      } catch (e) {
+        console.error(e);
+        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? t.timeout : t.error}</span>`;
+        secondaryEl.style.display = 'block';
       }
-
-      statusEl.innerHTML = `<span class="success">${t.success.replace('{email}', email)}</span>`;
-      hideButton();
-      secondaryEl.style.display = 'block';
     }
 
     async function init() {
       statusEl.textContent = t.loading;
 
-      // Detect missing config early
-      if (SUPABASE_URL.includes('YOUR_PROJECT') || SUPABASE_ANON_KEY.includes('YOUR_ANON')) {
-        statusEl.innerHTML = `<span class="error">${t.configError}</span>`;
+      if (!window.supabase) {
+        statusEl.innerHTML = `<span class="error">${t.clientError}</span>`;
         return;
       }
 
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (e) {
+        console.error(e);
+        statusEl.innerHTML = `<span class="error">${t.clientError}</span>`;
+        return;
+      }
+
+      try {
+        const { data: { session }, error } = await withTimeout(supabaseClient.auth.getSession());
 
         if (error) {
           console.error(error);
@@ -183,24 +207,31 @@
         }
       } catch (e) {
         console.error(e);
-        statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+        statusEl.innerHTML = `<span class="error">${e.message === 'timeout' ? t.timeout : t.error}</span>`;
         showButton();
       }
     }
 
     googleBtn.addEventListener('click', async () => {
+      if (!supabaseClient) return;
       statusEl.textContent = t.working;
       googleBtn.disabled = true;
 
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin + window.location.pathname
-        }
-      });
+      try {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + window.location.pathname
+          }
+        });
 
-      if (error) {
-        console.error(error);
+        if (error) {
+          console.error(error);
+          statusEl.innerHTML = `<span class="error">${t.error}</span>`;
+          googleBtn.disabled = false;
+        }
+      } catch (e) {
+        console.error(e);
         statusEl.innerHTML = `<span class="error">${t.error}</span>`;
         googleBtn.disabled = false;
       }
@@ -208,7 +239,9 @@
 
     signOutLink.addEventListener('click', async (e) => {
       e.preventDefault();
-      await supabase.auth.signOut();
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
       window.location.reload();
     });
 
