@@ -23,7 +23,7 @@ const translations = {
   en: {
     title: "Cabrero App",
     subtitle: "Fresh goat milk near you in Guatemala City",
-    heroPitch: "Less walking. Find customers. More sales. Get the Cabrero App.",
+    heroPitch: "Less walking. More customers. More sales. Get the Cabrero App.",
     heroText: "Hundreds of shepherds roam Guatemala City and surrounding areas selling fresh goat milk by the cup or liter. Their routes are hard to discover. The Cabrero App tracks the shepherds' paths and predicts when they will be near you.",
     ctaDownload: "Download for Android",
     howTitle: "How it works",

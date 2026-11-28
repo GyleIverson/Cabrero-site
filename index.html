@@ -7,16 +7,34 @@
   <meta name="description" content="Conecta cabreros de leche de cabra con compradores en Ciudad de Guatemala. Rastrea rutas y predice cuándo un cabrero estará cerca.">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .hero-video {
+    .hero-video-wrap {
+      position: relative;
       width: 100%;
       max-width: 360px;
+      margin: 1.5rem auto;
+    }
+    .hero-video {
+      width: 100%;
       height: auto;
       aspect-ratio: 9 / 16;
       object-fit: cover;
       border-radius: 12px;
-      margin: 1.5rem auto;
       display: block;
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .hero-pitch-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 12%;
+      text-align: center;
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.35;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,0.9);
+      padding: 0 1rem;
+      pointer-events: none;
     }
     .hero-pitch {
       font-size: 1.25rem;
@@ -43,11 +61,13 @@
     <div class="container">
       <h1 data-i18n="title">Cabrero App</h1>
       <p class="subtitle" data-i18n="subtitle">Leche de cabra fresca cerca de ti en Ciudad de Guatemala</p>
-      <video class="hero-video" autoplay muted loop playsinline controls poster="imagine_images/hero.jpg" aria-label="Cabrero App pitch video">
-        <source src="imagine_images/hero.mp4" type="video/mp4">
-        Tu navegador no soporta video.
-      </video>
-      <p class="hero-pitch" data-i18n="heroPitch">Menos caminar. Encuentra clientes. Más ventas. Consigue la Cabrero App</p>
+      <div class="hero-video-wrap">
+        <video class="hero-video" autoplay muted loop playsinline controls poster="imagine_images/hero.jpg" aria-label="Cabrero App pitch video">
+          <source src="imagine_images/hero.mp4" type="video/mp4">
+          Tu navegador no soporta video.
+        </video>
+        <div class="hero-pitch-overlay" data-i18n="heroPitch">Menos caminar. Más clientes. Más ventas. Consigue la Cabrero App.</div>
+      </div>
       <p data-i18n="heroText">Cientos de cabreros recorren Ciudad de Guatemala y alrededores vendiendo leche de cabra fresca por vaso o litro. Sus rutas son difíciles de descubrir. La Cabrero App rastrea los caminos de los cabreros y predice cuándo estarán cerca de ti.</p>
       <a href="https://cabrero.cabrero.app" class="cta" data-i18n="ctaDownload" target="_blank" rel="noopener">Descargar para Android</a>
       <!-- Update the download link above to your actual APK or Cloudflare/GitHub release URL -->
